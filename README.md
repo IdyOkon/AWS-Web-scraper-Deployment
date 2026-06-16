@@ -93,20 +93,22 @@ EC2 Application → CloudWatch Logs → S3 Archive
 ```
 
 # High Availability Setup
-Web scraper deployed across two EC2 instances
-Each instance placed in a separate Availability Zone
-Ensures system continues running if one AZ fails
+- Web scraper deployed across two EC2 instances
+- Each instance placed in a separate Availability Zone
+- Ensures system continues running if one AZ fails
 
 # How to Reproduce
-- Create VPC with public subnets in two AZs
-- Launch 2 EC2 instances in different AZs
-- Attach IAM role (webscraper-prod-role)
-- Install dependencies and clone repo
+- Create VPC with public subnets in two AZs: To reproduce this deployment, first create a VPC with public      subnets spanning at least two Availability Zones.
+- Launch the EC2 instances: Deploy two EC2 instances and place each one in a separate Availability Zone.
+- Configure IAM permissions: Create and attach the required IAM role with CloudWatch, SNS, S3, and Systems     Manager permissions.
+- Install dependencies and clone repo: Install Python, Git, and any packages required by the scraper and       verify that the scraper can successfully crawl the target website.
 - Run scraper on both instances
-- Configure CloudWatch alarm + SNS topic
-- Confirm email subscription for alerts
-- Configure CloudWatch Agent for logging
-- Export logs to S3 for archival
+- Enable background execution: Run the scraper using **nohup** and redirect output to **output.log** for       continuous operation.
+- Configure CloudWatch alarm + SNS topic.
+- Confirm email subscription for alerts.
+- Configure CloudWatch Agent for logging: Install and configure the Amazon CloudWatch Agent to collect logs    from the application log file and send them to a CloudWatch Log Group.
+- Archive logs to S3: Export CloudWatch Logs to an S3 bucket to provide long-term log retention.
+- Verify the deployment: Confirm that the scraper runs successfully, logs appear in CloudWatch, alerts are     delivered, and log exports are stored in S3.
 
 # Security Considerations
 - IAM roles used instead of hardcoded credentials
