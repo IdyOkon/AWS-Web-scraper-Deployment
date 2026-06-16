@@ -5,20 +5,22 @@ High availability web scraping application deployed on AWS EC2 across multiple A
 This project demonstrates the deployment of a web scraping application on AWS using EC2 instances distributed across multiple Availability Zones (AZs) to ensure high availability and fault tolerance. The system includes automated monitoring, centralized logging, and alerting using CloudWatch and SNS to notify on instance failures, with log archival to Amazon S3 for long-term storage.
 
 # Architecture
-- 2 EC2 instances deployed in different Availability Zones (eu-north-1a and eu-north-1b)
+The application was designed with availability and observability in mind. The following AWS resources were used to support deployment, monitoring, and log retention:
+- 2 EC2 instances deployed in different Availability Zones (eu-north-1a and eu-north-1b): This ensures the     application remains available even if one Availability Zone becomes unavailable.
 - Web scraper application running on both instances
 - IAM role attached for secure AWS service access
-- CloudWatch for monitoring instance health and logs
-- SNS for email alert notifications on failures
-- S3 bucket for log archival
+- CloudWatch for monitoring instance health and logs: Used to track instance health, collect application       logs, and create alarms.
+- SNS for email alert notifications on failures: Delivers alerts when CloudWatch detects infrastructure        issues.
+- S3 bucket for log archival: Stores exported CloudWatch logs for long-term retention and future analysis.
 
-  # AWS Services Used
-- Amazon EC2 (compute)
-- Amazon VPC (network isolation)
-- IAM (access control and permissions)
-- Amazon CloudWatch (monitoring, logs & alarms)
-- Amazon SNS (alert notifications)
-- Amazon S3 (log storage and archival)
+# AWS Services Used
+  This project leverages several AWS services to provide a reliable, observable, and fault-tolerant            environment.
+  - Amazon EC2 (compute): Hosts the web scraper application.
+  - Amazon VPC (network isolation): Provides network isolation and secure communication between resources.
+  - IAM (access control and permissions): Used to securely grant permissions to AWS resources.
+  - Amazon CloudWatch (monitoring, logs & alarms): Provides monitoring, alarms, and centralized log              collection.
+  - Amazon SNS (alert notifications): Sends alert notifications when failures occur.
+  - Amazon S3 (log storage and archival): Stores exported logs for long-term retention.
 
 # Deployment Steps
 # 1. Launch EC2 Instances
