@@ -96,20 +96,20 @@ Each instance placed in a separate Availability Zone
 Ensures system continues running if one AZ fails
 
 # How to Reproduce
-Create VPC with public subnets in two AZs
-Launch 2 EC2 instances in different AZs
-Attach IAM role (webscraper-prod-role)
-Install dependencies and clone repo
-Run scraper on both instances
-Configure CloudWatch alarm + SNS topic
-Confirm email subscription for alerts
-Configure CloudWatch Agent for logging
-Export logs to S3 for archival
+- Create VPC with public subnets in two AZs
+- Launch 2 EC2 instances in different AZs
+- Attach IAM role (webscraper-prod-role)
+- Install dependencies and clone repo
+- Run scraper on both instances
+- Configure CloudWatch alarm + SNS topic
+- Confirm email subscription for alerts
+- Configure CloudWatch Agent for logging
+- Export logs to S3 for archival
 
 # Security Considerations
-IAM roles used instead of hardcoded credentials
-Security groups restrict SSH access to trusted IPs
-Infrastructure designed with least privilege principle
+- IAM roles used instead of hardcoded credentials
+- Security groups restrict SSH access to trusted IPs
+- Infrastructure designed with least privilege principle
 
 # Outcome
 A fully functional, highly available web scraping system deployed on AWS with monitoring, centralized logging, alerting, and long-term log archival.
