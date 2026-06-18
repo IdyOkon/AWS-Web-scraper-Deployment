@@ -23,11 +23,11 @@ The application was designed with availability and observability in mind. The fo
   - Amazon S3 (log storage and archival): Stores exported logs for long-term retention.
 
 # Deployment Steps
-  1. Launch EC2 Instances
- - Launch two EC2 instances in different Availability Zones
+ 1. Launch EC2 Instances
+ - Create and launch two EC2 instances in different Availability Zones
  - Assign a key pair and security group allowing SSH access
 
-  2. Install Dependencies
+ 2. Install Dependencies
 ```bash
 sudo yum update -y
 sudo yum install git -y
@@ -35,38 +35,57 @@ sudo yum install python3 -y
 sudo yum install python3-pip -y
 ```
 
-  3. Clone Repository
+ 3. Clone Repository
 ```bash
 git clone <your-repo-url>
 cd Webscraper
 ```
 
-  4. Install Python Dependencies
+ 4. Install Python Dependencies
 ```bash
 pip3 install -r requirements.txt
 ```
 
-  5. Run Web Scraper
+ 5. Run Web Scraper
 ```bash
 python3 webscraper.py https://quotes.toscrape.com
 ```
 
-  6. Run in Background
+ 6. Run in Background
 ```bash
 nohup python3 webscraper.py https://quotes.toscrape.com > output.log 2>&1 &
 ```
 
 # Monitoring & Alerting
-# CloudWatch Alarm
-- Metric: StatusCheckFailed
-- Condition: Greater than 0
-- Evaluation: 1 minute interval
-- Action: Trigger SNS notification
 
-# SNS Alerting
-- SNS topic created: webscraper-alerts
-- Email subscription configured and confirmed
-- Alerts sent when EC2 instance failure is detected
+To ensure operational visibility and rapid incident response, monitoring and alerting were configured using Amazon CloudWatch and Amazon SNS.
+
+CloudWatch Alarm
+
+- Metric: "StatusCheckFailed"
+  Monitors the health status of the EC2 instances and detects infrastructure-level failures.
+
+
+- Condition: Greater than 0
+  The alarm is triggered whenever an instance fails a status check.
+
+- Evaluation Period: 1 minute
+  Ensures failures are detected quickly and notifications are sent with minimal delay.
+
+- Action: Trigger SNS notification
+  Automatically notifies subscribed users when a failure occurs.
+
+SNS Alerting
+
+- SNS Topic: "webscraper-alerts"
+  Serves as the central notification channel for infrastructure alerts.
+
+- Email Subscription Configured and Confirmed
+  Allows notifications to be delivered directly to administrators through email.
+
+- Automatic Failure Notifications
+  Ensures that operational issues are detected and communicated without manual intervention.
+
 
 # Logging & Log Archival (CloudWatch -- S3)
 Application logs from the web scraper are generated on each EC2 instance and written to a local file **(output.log)** using **nohup** to ensure continuous background execution. Logs were validated in real time using **tail -f output.log**
@@ -99,10 +118,10 @@ EC2 Application → CloudWatch Logs → S3 Archive
 
 # How to Reproduce
 - Create VPC with public subnets in two AZs: To reproduce this deployment, first create a VPC with public      subnets spanning at least two Availability Zones.
-- Launch the EC2 instances: Deploy two EC2 instances and place each one in a separate Availability Zone.
+- Launch the EC2 instances: Create two EC2 instances and place each one in a separate Availability Zone.
 - Configure IAM permissions: Create and attach the required IAM role with CloudWatch, SNS, S3, and Systems     Manager permissions.
-- Install dependencies and clone repo: Install Python, Git, and any packages required by the scraper and       verify that the scraper can successfully crawl the target website.
-- Run scraper on both instances
+- Install dependencies: Install Python, Git, and any packages required by the scraper. 
+- Clone and run the application: Clone the repository and verify that the scraper can successfully crawl the target website.
 - Enable background execution: Run the scraper using **nohup** and redirect output to **output.log** for       continuous operation.
 - Configure CloudWatch alarm + SNS topic.
 - Confirm email subscription for alerts.
@@ -111,9 +130,29 @@ EC2 Application → CloudWatch Logs → S3 Archive
 - Verify the deployment: Confirm that the scraper runs successfully, logs appear in CloudWatch, alerts are     delivered, and log exports are stored in S3.
 
 # Security Considerations
-- IAM roles used instead of hardcoded credentials
-- Security groups restrict SSH access to trusted IPs
-- Infrastructure designed with least privilege principle
+
+The deployment was designed with basic cloud security best practices in mind.
+
+- IAM Roles Instead of Hardcoded Credentials: EC2 instances access AWS services securely without storing access keys within the application.
+
+- Security Group Restrictions: SSH access is limited to trusted sources to reduce unauthorized access attempts.
+
+- Least Privilege Principle: Permissions are granted only where required to minimize potential security risks.
+
+- Managed AWS Services: CloudWatch, SNS, and S3 were used through AWS-managed integrations, reducing operational complexity and improving security.
 
 # Outcome
-A fully functional, highly available web scraping system deployed on AWS with monitoring, centralized logging, alerting, and long-term log archival.
+
+The project successfully demonstrates several core AWS and DevOps concepts:
+
+- High Availability Deployment: The scraper runs across multiple Availability Zones to improve fault tolerance.
+
+- Centralized Monitoring: CloudWatch provides visibility into instance health and application activity.
+
+- Automated Alerting: SNS delivers real-time notifications when failures are detected.
+
+- Centralized Logging: Application logs are collected and managed through CloudWatch Logs.
+
+- Long-Term Log Retention: Logs are archived to Amazon S3 for future analysis and compliance purposes.
+
+- Production-Style Observability Pipeline: The solution combines monitoring, alerting, logging, and storage into a single workflow.
