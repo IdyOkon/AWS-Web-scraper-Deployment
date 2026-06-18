@@ -23,11 +23,11 @@ The application was designed with availability and observability in mind. The fo
   - Amazon S3 (log storage and archival): Stores exported logs for long-term retention.
 
 # Deployment Steps
- 1. Launch EC2 Instances
+1. Launch EC2 Instances
  - Create and launch two EC2 instances in different Availability Zones
  - Assign a key pair and security group allowing SSH access
 
- 2. Install Dependencies
+2. Install Dependencies
 ```bash
 sudo yum update -y
 sudo yum install git -y
@@ -35,23 +35,23 @@ sudo yum install python3 -y
 sudo yum install python3-pip -y
 ```
 
- 3. Clone Repository
+3. Clone Repository
 ```bash
 git clone <your-repo-url>
 cd Webscraper
 ```
 
- 4. Install Python Dependencies
+4. Install Python Dependencies
 ```bash
 pip3 install -r requirements.txt
 ```
 
- 5. Run Web Scraper
+5. Run Web Scraper
 ```bash
 python3 webscraper.py https://quotes.toscrape.com
 ```
 
- 6. Run in Background
+6. Run in Background
 ```bash
 nohup python3 webscraper.py https://quotes.toscrape.com > output.log 2>&1 &
 ```
@@ -60,7 +60,7 @@ nohup python3 webscraper.py https://quotes.toscrape.com > output.log 2>&1 &
 
 To ensure operational visibility and rapid incident response, monitoring and alerting were configured using Amazon CloudWatch and Amazon SNS.
 
-CloudWatch Alarm
+ **CloudWatch Alarm**
 
 - Metric: "StatusCheckFailed"
   Monitors the health status of the EC2 instances and detects infrastructure-level failures.
@@ -75,16 +75,14 @@ CloudWatch Alarm
 - Action: Trigger SNS notification
   Automatically notifies subscribed users when a failure occurs.
 
-SNS Alerting
+**SNS Alerting**
 
 - SNS Topic: "webscraper-alerts"
   Serves as the central notification channel for infrastructure alerts.
 
-- Email Subscription Configured and Confirmed
-  Allows notifications to be delivered directly to administrators through email.
+- Email Subscription Configured and Confirmed: Allows notifications to be delivered directly to administrators through email.
 
-- Automatic Failure Notifications
-  Ensures that operational issues are detected and communicated without manual intervention.
+- Automatic Failure Notifications: Ensures that operational issues are detected and communicated without manual intervention.
 
 
 # Logging & Log Archival (CloudWatch -- S3)
