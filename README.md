@@ -27,7 +27,15 @@ The application was designed with availability and observability in mind. The fo
  - Create and launch two EC2 instances in different Availability Zones
  - Assign a key pair and security group allowing SSH access
 
-**2. Install Dependencies**
+**2. Connect to EC2 and Install Dependencies**
+
+ From your local machine, SSH into the EC2 instance:
+
+```bash
+ssh -i "your-key.pem" ec2-user@<EC2-PUBLIC-IP>
+
+Then install the required dependencies:
+
 ```bash
 sudo yum update -y
 sudo yum install git -y
@@ -69,10 +77,11 @@ It monitors the health status of the EC2 instances and detects infrastructure-le
 - Condition: Greater than 0 -
   The alarm is triggered whenever an instance fails a status check.
 
-- Evaluation Period: 1 minute - This ensures failures are detected quickly and notifications are sent with minimal delay.
+- Evaluation Period: 1 minute - Checks the instance every minute so problems can be detected quickly.
+
 
 - Action: Trigger SNS notification - 
-This Automatically notifies subscribed users when a failure occurs.
+Sends an email notification when a failure is detected.
 
 **SNS Alerting**
 
@@ -115,6 +124,7 @@ EC2 Application → CloudWatch Logs → S3 Archive
 - Create VPC with public subnets in two AZs: To reproduce this deployment, first create a VPC with public      subnets spanning at least two Availability Zones.
 - Launch the EC2 instances: Create two EC2 instances and place each one in a separate Availability Zone.
 - Configure IAM permissions: Create and attach the required IAM role with CloudWatch, SNS, S3, and Systems     Manager permissions.
+- Connect to the EC2 instance using SSH: From your local machine, connect to each instance using SSH to begin setup work.
 - Install dependencies: Install Python, Git, and any packages required by the scraper. 
 - Clone and run the application: Clone the repository and verify that the scraper can successfully crawl the target website.
 - Enable background execution: Run the scraper using **nohup** and redirect output to **output.log** for       continuous operation.
@@ -128,13 +138,13 @@ EC2 Application → CloudWatch Logs → S3 Archive
 
 The deployment was designed with basic cloud security best practices in mind.
 
-- IAM Roles Instead of Hardcoded Credentials: EC2 instances access AWS services securely without storing access keys within the application.
+- IAM Roles Attached to EC2 instances: AWS permissions were provided through an IAM role instead of storing access keys on the EC2 instances.
 
-- Security Group Restrictions: SSH access is limited to trusted sources to reduce unauthorized access attempts.
+- Security Group Restrictions: The EC2 security group was configured to allow SSH access only from authorized IP addresses.
 
-- Least Privilege Principle: Permissions are granted only where required to minimize potential security risks.
+- CloudWatch Agent Permissions: The CloudWatch Agent used the attached IAM role to send logs to CloudWatch.
 
-- Managed AWS Services: CloudWatch, SNS, and S3 were used through AWS-managed integrations, reducing operational complexity and improving security.
+- S3 and SNS Access Through IAM Policies: Permissions required for log export and notifications were granted through IAM policies attached to the IAM role.
 
 # Outcome
 
