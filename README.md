@@ -77,7 +77,7 @@ This Automatically notifies subscribed users when a failure occurs.
 **SNS Alerting**
 
 - SNS Topic: The topic here is "webscraper-alerts"- It sends an email notification when CloudWatch Alarm is triggered.
-- Email Subscription Configured and Confirmed: Receives alerts whenever am EC2 instance fails a status check.
+- Email Subscription: Configured and Confirmed - Receives alerts whenever an EC2 instance fails a status check.
 
 - Automatic Failure Notifications: Alerts are sent automatically when a CloudWatch alarm is triggered, without needing manual checks.
 
