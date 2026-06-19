@@ -33,6 +33,7 @@ The application was designed with availability and observability in mind. The fo
 
 ```bash
 ssh -i "your-key.pem" ec2-user@<EC2-PUBLIC-IP>
+```
 
 Then install the required dependencies:
 
